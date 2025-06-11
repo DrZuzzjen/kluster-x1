@@ -133,10 +133,11 @@ def get_context_from_docs(topic, subtopic):
         }
         return context_map.get(subtopic, f"kluster.ai's {subtopic.lower()} capabilities")
     
-    # Get real content from docs
+    # Get FULL content from docs (using massive context window!)
     if topic in docs_data['topics'] and subtopic in docs_data['topics'][topic]:
         subtopic_data = docs_data['topics'][topic][subtopic]
-        return subtopic_data.get('summary', subtopic_data.get('content', '')[:500])
+        # Return FULL content, not truncated summary
+        return subtopic_data.get('content', subtopic_data.get('summary', ''))
     
     return f"kluster.ai's {subtopic.lower()} capabilities"
 
@@ -157,8 +158,9 @@ def generate_tweet(topic, subtopic, audience="", tone="Professional & Trustworth
     print(f"📄 Context from docs:\n{context}")
     print("-"*80)
     
-    # Check if model supports thinking (DeepSeek R1 models)
-    supports_thinking = "deepseek-r1" in model.lower()
+    # Check if model supports thinking/reasoning
+    thinking_models = ["deepseek-r1", "r1", "reasoning", "think", "cot", "chain-of-thought"]
+    supports_thinking = any(keyword in model.lower() for keyword in thinking_models)
     
     # Build prompt using appropriate function
     if supports_thinking:

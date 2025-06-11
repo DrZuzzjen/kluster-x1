@@ -1,6 +1,6 @@
 """
-Simplified prompt templates for kluster.ai tweet generation.
-Two types: with thinking (for reasoning models) and without.
+Real kluster.ai tweet generation using actual template and full documentation context.
+Dynamically adapts to documentation content without hardcoded bias.
 """
 
 def get_tweet_prompt_with_thinking(
@@ -13,50 +13,69 @@ def get_tweet_prompt_with_thinking(
     mission: str = ""
 ) -> str:
     """
-    For reasoning models like DeepSeek R1 that support thinking tags.
+    For reasoning models that support thinking tags.
+    Uses real kluster.ai tweet template and full documentation context.
     """
     
-    base_context = f"""You are an expert social media strategist for kluster.ai, a distributed AI platform.
+    # Use provided example or kluster.ai template
+    template_example = example_tweet if example_tweet else """🚨 Just launched:
+Meet Verify by http://kluster.ai: Out-of-the-box reliability for LLMs.
 
-<context>
-Company: kluster.ai - Distributed AI infrastructure platform
-Key features: Reliability checks, OpenAI compatibility, scalable deployments, hallucination prevention
+A drop-in API that flags hallucinations, false claims, and low-quality outputs before they reach users or downstream tools.
 
-Documentation context:
+No fine-tuning. No thresholds. No infra changes.
+🔗 https://kluster.ai/verify-by-kluster.ai"""
+
+    prompt = f"""You are kluster.ai's senior social media strategist. You write tweets that consistently drive signups and engagement.
+
+DOCUMENTATION CONTEXT FOR {topic} - {subtopic}:
 {context}
 
-Topic focus: {topic} - {subtopic}
-Tone: {tone}
-{"Audience: " + audience if audience else ""}
-{"Mission: " + mission if mission else ""}
-{"Reference style: " + example_tweet if example_tweet else ""}
-</context>
+TARGET AUDIENCE: {audience if audience else "AI developers and engineering teams"}
+TONE: {tone}
+MISSION: {mission if mission else "Convert readers into kluster.ai users"}
+
+KLUSTER.AI TWEET TEMPLATE TO FOLLOW:
+{template_example}
 
 <think>
-I need to create a compelling tweet for kluster.ai. Let me think through this step by step:
+Let me analyze this kluster.ai template structure:
 
-1. What's the core message from the documentation context?
-2. What pain point does this topic address for the target audience?
-3. How can I create a hook that stops scrolling?
-4. What's the emotional trigger here?
-5. How do I position kluster.ai as the solution?
-6. What's the call to action?
+1. ATTENTION GRABBER: "🚨 Just launched:" - Creates urgency and novelty
+2. PRODUCT INTRODUCTION: "Meet [Product] by http://kluster.ai: [One-line value prop]"
+3. BENEFIT EXPLANATION: Clear description of what it does and why it matters
+4. FRICTION REMOVAL: "No [pain point]. No [pain point]. No [pain point]." - Removes objections
+5. CALL TO ACTION: Clean link with branded URL
 
-kluster.ai's best tweets follow this structure:
-- Bold hook (5-10 words)
-- Problem amplification (15-25 words) 
-- Universal question (10-15 words)
-- Solution reveal (20-30 words)
-- Clear CTA (5-10 words)
+Now I need to extract from the documentation context:
+- What specific capability/feature should I highlight?
+- What pain points does this solve that I can negate with "No X. No Y. No Z."?
+- What's the core value proposition that would stop someone scrolling?
+- How does this fit kluster.ai's positioning as reliable AI infrastructure?
 
-Let me craft something that follows this formula while staying under 280 characters.
+Looking at the documentation: {context[:500]}...
+
+I should craft this to match kluster.ai's voice - direct, technical but accessible, benefit-focused.
 </think>
 
-Create a compelling tweet for kluster.ai following the structure above. Focus on emotional impact and urgency. 
+Using the kluster.ai template structure above, create a tweet about {subtopic} that:
 
-Output only the tweet text, nothing else."""
+1. Starts with an attention-grabbing opener (emoji + urgency/novelty)
+2. Introduces the kluster.ai capability with clear value prop
+3. Explains the benefit using insights from the documentation
+4. Removes friction with "No X. No Y. No Z." format using real pain points from the docs
+5. Ends with a clear call to action
 
-    return base_context
+CRITICAL REQUIREMENTS:
+- Extract specific details from the documentation context provided
+- Use kluster.ai's confident, technical tone
+- Focus on the exact capability described in the docs
+- Maximum 280 characters
+- Include "http://kluster.ai" naturally in the messaging
+
+Output only the tweet text."""
+
+    return prompt
 
 
 def get_tweet_prompt_without_thinking(
@@ -69,43 +88,52 @@ def get_tweet_prompt_without_thinking(
     mission: str = ""
 ) -> str:
     """
-    For regular models that don't support thinking tags.
+    For regular models without thinking capabilities.
+    Uses real kluster.ai tweet template and full documentation context.
     """
     
-    optional_sections = []
-    if audience:
-        optional_sections.append(f"Target audience: {audience}")
-    if mission:
-        optional_sections.append(f"Mission: {mission}")
-    if example_tweet:
-        optional_sections.append(f"Reference style: {example_tweet}")
-    
-    optional_text = "\n".join(optional_sections)
-    if optional_text:
-        optional_text = "\n\n" + optional_text
-    
-    return f"""You are an expert social media strategist for kluster.ai, a distributed AI platform.
+    # Use provided example or kluster.ai template
+    template_example = example_tweet if example_tweet else """🚨 Just launched:
+Meet Verify by http://kluster.ai: Out-of-the-box reliability for LLMs.
 
-Company: kluster.ai - Distributed AI infrastructure platform  
-Key features: Reliability checks, OpenAI compatibility, scalable deployments, hallucination prevention
+A drop-in API that flags hallucinations, false claims, and low-quality outputs before they reach users or downstream tools.
 
-Documentation context:
+No fine-tuning. No thresholds. No infra changes.
+🔗 https://kluster.ai/verify-by-kluster.ai"""
+
+    prompt = f"""You are kluster.ai's senior social media strategist. You write tweets that drive signups.
+
+DOCUMENTATION CONTEXT FOR {topic} - {subtopic}:
 {context}
 
-Topic focus: {topic} - {subtopic}
-Tone: {tone}{optional_text}
+TARGET: {audience if audience else "AI developers and engineering teams"}
+TONE: {tone}
+MISSION: {mission if mission else "Convert readers into kluster.ai users"}
 
-Create a compelling tweet following this proven structure:
-1. Bold hook (5-10 words) - stop scrolling
-2. Problem amplification (15-25 words) - make them feel the pain
-3. Universal question (10-15 words) - read their mind
-4. Solution reveal (20-30 words) - position kluster.ai 
-5. Clear CTA (5-10 words) - drive action
+PROVEN KLUSTER.AI TWEET TEMPLATE:
+{template_example}
 
-Requirements:
-- Maximum 280 characters
-- No hashtags or emojis unless essential
-- Focus on emotional impact and urgency
-- Make it feel like urgent insider information
+TEMPLATE STRUCTURE ANALYSIS:
+1. ATTENTION: "🚨 Just launched:" (urgency + novelty)
+2. INTRO: "Meet [Product] by http://kluster.ai: [Value prop]"  
+3. BENEFIT: Clear explanation of capability and impact
+4. FRICTION REMOVAL: "No [pain]. No [pain]. No [pain]."
+5. CTA: Clean branded link
 
-Output only the tweet text, nothing else."""
+YOUR TASK:
+Create a tweet about {subtopic} using this exact template structure.
+
+INSTRUCTIONS:
+- Mine the documentation context for specific technical details
+- Identify real pain points this kluster.ai capability solves
+- Use the "No X. No Y. No Z." pattern with actual friction points from docs
+- Include "http://kluster.ai" naturally
+- Match kluster.ai's confident, technical tone
+- Stay under 280 characters
+- Focus on business impact, not just features
+
+Extract insights directly from the provided documentation context. Do not add generic claims not supported by the docs.
+
+Output only the tweet text."""
+
+    return prompt
