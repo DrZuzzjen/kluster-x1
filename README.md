@@ -49,7 +49,7 @@ Generate compelling tweets to promote kluster.ai's distributed AI platform using
 
 5. Run the app:
    ```bash
-   streamlit run app.py
+   streamlit run streamlit_app.py
    ```
 
 ## Usage
@@ -66,7 +66,7 @@ Generate compelling tweets to promote kluster.ai's distributed AI platform using
 
 ## Architecture
 
-- `app.py`: Main Streamlit application
+- `streamlit_app.py`: Main Streamlit application
 - `prompts.py`: Tweet generation prompts (with/without thinking)
 - `async_docs_scraper.py`: Fast async documentation indexer
 - `kluster_docs.json`: Pre-scraped documentation cache

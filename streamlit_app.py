@@ -203,13 +203,25 @@ def generate_tweet(topic, subtopic, audience="", tone="Professional & Trustworth
 
 def main():
     st.set_page_config(
-        page_title="kluster.ai Tweet Generator", 
-        page_icon="🚀",
+        page_title="kluster-x Tweet Generator", 
+        page_icon="🚀",  # Fallback emoji (AVIF not supported locally)
         layout="wide"
     )
     
-    st.title("🚀 kluster.ai Tweet Generator")
-    st.markdown("*Create compelling tweets to promote kluster.ai's AI platform*")
+    # Header with logo
+    col_logo, col_title = st.columns([1, 4])
+    
+    with col_logo:
+        try:
+            st.image("logo.png", width=80)
+        except Exception as e:
+            # Fallback if logo not found
+            st.write(f"Logo error: {e}")
+            st.markdown("🔗 **kluster.ai**")
+    
+    with col_title:
+        st.title("kluster-X")
+        st.markdown("*Create compelling tweets using kluster.ai's documentation*")
     
     # Check API key
     if not os.getenv("KLUSTER_API_KEY"):
