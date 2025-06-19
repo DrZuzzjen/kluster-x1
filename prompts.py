@@ -3,6 +3,19 @@ Real kluster.ai tweet generation using actual template and full documentation co
 Dynamically adapts to documentation content without hardcoded bias.
 """
 
+TWEET_EXAMPLES = [
+    # Existing example (if present)
+    "🚨 Just launched:\nMeet Verify by http://kluster.ai: Out-of-the-box reliability for LLMs.\n\nA drop-in API that flags hallucinations, false claims, and low-quality outputs before they reach users or downstream tools.\n\nNo fine-tuning. No thresholds. No infra changes.\n🔗 https://kluster.ai/verify-by-kluster.ai",
+    # New Example 1
+    "Deploy AI without fear.\n\nA single hallucination can shatter customer trust or derail critical processes.\n\nEvery AI deployment faces the same critical question: “How do we know when our model gets it wrong?”\n\nIn our latest blog about Verify by http://kluster.ai, our new reliability tool for LLMs, we break down how it helps teams catch mistakes before they reach production.\n\nRead more here: https://bit.ly/45gbcRz",
+    # New Example 2
+    "The Hugging Face model you need isn’t hosted?\nhttp://kluster.ai lets you run it anyway.\n\nSpin up a private, production-ready endpoint in ~30 mins using Dedicated Deployments.\n\n🧠 https://docs.kluster.ai/get-started/dedicated-deployments/",
+    # New Example 3
+    "Jupyter notebooks in one click. Hyperbolic keeps you coding, not context switching.\n\nWith our VS @code / @cursor_ai extension, rent a remote H100 GPU and spin up a fully managed Jupyter server on a public URL to run your ML workloads from right inside your editor.\n\nFollow along with @theamrelhady and see comments for install instructions! + [Short Video]",
+]
+
+tweet_examples_text = "\n\n---\n\n".join(TWEET_EXAMPLES)
+
 def get_tweet_prompt_with_thinking(
     context: str,
     topic: str,
@@ -14,18 +27,8 @@ def get_tweet_prompt_with_thinking(
 ) -> str:
     """
     For reasoning models that support thinking tags.
-    Uses real kluster.ai tweet template and full documentation context.
+    Uses all kluster.ai tweet examples and full documentation context.
     """
-    
-    # Use provided example or kluster.ai template
-    template_example = example_tweet if example_tweet else """🚨 Just launched:
-Meet Verify by http://kluster.ai: Out-of-the-box reliability for LLMs.
-
-A drop-in API that flags hallucinations, false claims, and low-quality outputs before they reach users or downstream tools.
-
-No fine-tuning. No thresholds. No infra changes.
-🔗 https://kluster.ai/verify-by-kluster.ai"""
-
     prompt = f"""You are kluster.ai's senior social media strategist. You write tweets that consistently drive signups and engagement.
 
 DOCUMENTATION CONTEXT FOR {topic} - {subtopic}:
@@ -35,17 +38,20 @@ TARGET AUDIENCE: {audience if audience else "AI developers and engineering teams
 TONE: {tone}
 MISSION: {mission if mission else "Convert readers into kluster.ai users"}
 
-KLUSTER.AI TWEET TEMPLATE TO FOLLOW:
-{template_example}
+KLUSTER.AI TWEET EXAMPLES TO FOLLOW:
+{tweet_examples_text}
+
+Take all these examples into consideration to craft the perfect tweet.
+Try to reference something from the docs passed as context.
 
 <think>
-Let me analyze this kluster.ai template structure:
+Let me analyze these kluster.ai tweet structures:
 
-1. ATTENTION GRABBER: "🚨 Just launched:" - Creates urgency and novelty
-2. PRODUCT INTRODUCTION: "Meet [Product] by http://kluster.ai: [One-line value prop]"
-3. BENEFIT EXPLANATION: Clear description of what it does and why it matters
-4. FRICTION REMOVAL: "No [pain point]. No [pain point]. No [pain point]." - Removes objections
-5. CALL TO ACTION: Clean link with branded URL
+1. ATTENTION GRABBER: Hooks the reader with urgency, novelty, or a bold claim.
+2. PRODUCT INTRODUCTION: Clearly introduces a kluster.ai capability or update.
+3. BENEFIT EXPLANATION: Describes what it does and why it matters, referencing real pain points.
+4. FRICTION REMOVAL: "No [pain point]. No [pain point]. No [pain point]." - Removes objections.
+5. CALL TO ACTION: Clean link with branded URL or resource.
 
 Now I need to extract from the documentation context:
 - What specific capability/feature should I highlight?
@@ -60,7 +66,7 @@ I should craft this to match kluster.ai's voice - direct, technical but accessib
 
 Using the kluster.ai template structure above, create a tweet about {subtopic} that:
 
-1. Starts with an attention-grabbing opener (emoji + urgency/novelty)
+1. Starts with an attention-grabbing opener (emoji or bold statement)
 2. Introduces the kluster.ai capability with clear value prop
 3. Explains the benefit using insights from the documentation
 4. Removes friction with "No X. No Y. No Z." format using real pain points from the docs
@@ -74,7 +80,6 @@ CRITICAL REQUIREMENTS:
 - Include "http://kluster.ai" naturally in the messaging
 
 Output only the tweet text."""
-
     return prompt
 
 
@@ -89,18 +94,8 @@ def get_tweet_prompt_without_thinking(
 ) -> str:
     """
     For regular models without thinking capabilities.
-    Uses real kluster.ai tweet template and full documentation context.
+    Uses all kluster.ai tweet examples and full documentation context.
     """
-    
-    # Use provided example or kluster.ai template
-    template_example = example_tweet if example_tweet else """🚨 Just launched:
-Meet Verify by http://kluster.ai: Out-of-the-box reliability for LLMs.
-
-A drop-in API that flags hallucinations, false claims, and low-quality outputs before they reach users or downstream tools.
-
-No fine-tuning. No thresholds. No infra changes.
-🔗 https://kluster.ai/verify-by-kluster.ai"""
-
     prompt = f"""You are kluster.ai's senior social media strategist. You write tweets that drive signups.
 
 DOCUMENTATION CONTEXT FOR {topic} - {subtopic}:
@@ -110,18 +105,21 @@ TARGET: {audience if audience else "AI developers and engineering teams"}
 TONE: {tone}
 MISSION: {mission if mission else "Convert readers into kluster.ai users"}
 
-PROVEN KLUSTER.AI TWEET TEMPLATE:
-{template_example}
+KLUSTER.AI TWEET EXAMPLES TO FOLLOW:
+{tweet_examples_text}
+
+Take all these examples into consideration to craft the perfect tweet.
+Try to reference something from the docs passed as context.
 
 TEMPLATE STRUCTURE ANALYSIS:
-1. ATTENTION: "🚨 Just launched:" (urgency + novelty)
-2. INTRO: "Meet [Product] by http://kluster.ai: [Value prop]"  
-3. BENEFIT: Clear explanation of capability and impact
+1. ATTENTION: Hooks the reader with urgency, novelty, or a bold claim.
+2. INTRO: Clearly introduces a kluster.ai capability or update.
+3. BENEFIT: Explains capability and impact based on documentation context.
 4. FRICTION REMOVAL: "No [pain]. No [pain]. No [pain]."
-5. CTA: Clean branded link
+5. CTA: Clean branded link or resource.
 
 YOUR TASK:
-Create a tweet about {subtopic} using this exact template structure.
+Create a tweet about {subtopic} using this structure.
 
 INSTRUCTIONS:
 - Mine the documentation context for specific technical details
@@ -135,5 +133,4 @@ INSTRUCTIONS:
 Extract insights directly from the provided documentation context. Do not add generic claims not supported by the docs.
 
 Output only the tweet text."""
-
     return prompt
